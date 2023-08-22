@@ -37,7 +37,7 @@ class EventManager:
         try:
             with open('events.json', 'r') as f:
                 events_data = json.load(f)
-        except FileNotFoundError:
+        except (FileNotFoundError, json.JSONDecodeError):
             events_data = {}
 
         self.__events = {event_id: Event(event_id, event_data['name']) for event_id, event_data in events_data.items()}
