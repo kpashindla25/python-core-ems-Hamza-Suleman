@@ -137,4 +137,4 @@ event_manager.web_app()
 
 #Overall this program creates the event management system using object oriented programming as much as possible,
 #we have used examples of encapsulation and abstraction mainly. In this code we did not get an opportunity to use
-#inheritance or polymorphism howevever im sure they can be implemented if I recreated the program again
+#inheritance or polymorphism howevever im sure they can be implemented if I recreated the program again.
