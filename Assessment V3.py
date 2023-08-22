@@ -28,6 +28,9 @@ class Event:
 
     def set_name(self, name):
         self.__name = name
+
+    def __del__(self):
+        pass  # Optionally handle cleanup actions here, such as saving data
 #This class encapsulates an event, it stores the event details and includes a method for adding attendees
 #In order to output the details of an event the get_event_info method is used to call the protected attributes
 #The set_name method is used to set the abstracted name for the event without cuasing name mangaling issues
@@ -43,7 +46,7 @@ class EventManager:
         self.__events = {event_id: Event(event_id, event_data['name']) for event_id, event_data in events_data.items()}
 
     def write_to_file(self):
-        events_data = {event_id: {'name': event.get_event_info()} for event_id, event in self.__events.items()}
+        events_data = {event_id: {'name': event._Event__name} for event_id, event in self.__events.items()}
         with open('events.json', 'w') as f:
             json.dump(events_data, f)
 
