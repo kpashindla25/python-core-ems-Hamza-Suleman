@@ -1,1 +1,10 @@
-{"1": {"name": "Conference", "date": "15/09/2023", "location": "Convention Center", "attendees": ["John Doe", "Jane Smith"]}, "2": {"name": "Workshop", "date": "01/10/2023", "location": "Training Room", "attendees": ["Alice Johnson", "Bob Brown"]}, "3": {"name": "test edit name", "date": "00/00/0000", "location": "toronto", "attendees": ["test guy"]}}
+{
+  "1": {
+    "name": "Event Name",
+    "date": "Event Date",
+    "location": "Event Location",
+    "attendees": [
+      {"name": "Attendee 1", "age": 25, "gender": "Male", "contact": "email@example.com"},
+      {"name": "Attendee 2", "age": 30, "gender": "Female", "contact": "contact@example.com"}
+    ]
+  },
