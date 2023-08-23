@@ -80,6 +80,14 @@ class Event:
                 f"Number of Attendees: {len(self.__attendees)}\n"
                 f"------------------------------------------")
 
+    def delete_attendee(self, attendee_name):
+        for attendee in self.__attendees:
+            if attendee.get_name == attendee_name:
+                self.__attendees.remove(attendee)
+                return True
+        return False
+    #this method allows the webapp to delete an attendee from a specific event using their name
+
     def set_name(self, name):
         self.__name = name
 
@@ -211,6 +219,18 @@ class EventManager:
     #this function will list all of the attendees for a specific event using the method included in the attendee class
     #to access protected attributes due to the abstraction techniques employed
 
+    def delete_attendee(self, event_id, attendee_name):
+        if event_id in self.__events:
+            event = self.__events[event_id]
+            if event.delete_attendee(attendee_name):
+                self.write_to_file()
+                print(f"{attendee_name} successfully removed from event {event.name}.")
+            else:
+                print(f"{attendee_name} not found in event {event.name}.")
+        else:
+            raise EventNotFoundException
+    #this method allows the user to choose to delete an attendee and writes the changes to the file
+
     #below is a method that creates the entire front end of the webapp, it alows the user to navigate various functions
     #and includes custom error handling to deal with exceptions as well as writing all the user inputs
     #and changes to the file, the webapp includes all the functions outlines in the assessment brief
@@ -223,7 +243,8 @@ class EventManager:
             print("4. Delete Event")
             print("5. Add Attendee")
             print("6. List Attendees")
-            print("7. Exit")
+            print("7. Delete Attendee")
+            print("8. Exit")
 
             choice = input("Select an option: ")
 
@@ -279,7 +300,17 @@ class EventManager:
                     self.list_attendees(event_id)
                 except EventNotFoundException as e:
                     print(e)
-            elif choice == '7':
+            elif choice == '7' :
+                try:
+                    event_id = input("Enter Event ID: ")
+                    print(f"\nThese are the attendees currently in Event {event_id}")
+                    self.list_attendees(event_id)
+                    print(f"\nWhich attendee would you like to delete?")
+                    attendee_name = input("Attendee Full Name: ")
+                    self.delete_attendee(event_id, attendee_name)
+                except EventNotFoundException as e:
+                    print(e)
+            elif choice == '8':
                 print("Exiting...")
                 break
             else:
