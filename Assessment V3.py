@@ -9,8 +9,11 @@ import json
 #This is an example of using the 4 pillars of OOP, mostly throught the use of encapsulation and abstraction
 
 class Attendee:
-    def __init__(self, name):
+    def __init__(self, name, age, gender, contact):
         self.__name = name
+        self.__age = age
+        self.__gender = gender
+        self.__contact = contact
 
     @property
     def get_name(self):
@@ -19,6 +22,30 @@ class Attendee:
     @get_name.setter
     def get_name(self,new_name):
         self.__name = new_name
+
+    @property
+    def age(self):
+        return self.__age
+
+    @age.setter
+    def age(self,new_age):
+        self.__age = new_age
+
+    @property
+    def gender(self):
+        return self.__gender
+
+    @gender.setter
+    def gender(self,new_gender):
+        self.__gender = new_gender
+
+    @property
+    def contact(self):
+        return self.contact
+
+    @contact.setter
+    def contact(self,new_contact):
+        self.__contact = new_contact
 #This class encapsulates the attendees, and includes a method get_name for accessing the protected attribute 'name'
 
 class Event:
@@ -119,9 +146,13 @@ class EventManager:
         self.__events = {}
         for event_id, event_data in events_data.items():
             event = Event(event_id, event_data['name'], event_data['date'], event_data['location'])
-            for attendee_name in event_data.get('attendees', []):
-                event.add_attendee(Attendee(attendee_name))
-            self.__events[event_id] = event
+            for attendee_info in event_data.get('attendees', []):
+                attendee_name = attendee_info['name']
+                attendee_age = attendee_info['age']
+                attendee_gender = attendee_info['gender']
+                attendee_contact = attendee_info['contact']
+                event.add_attendee(Attendee(attendee_name, attendee_age, attendee_gender, attendee_contact))
+            self.__events[event_id] = event2
 
     def write_to_file(self):
         events_data = {
@@ -197,10 +228,10 @@ class EventManager:
             raise EventNotFoundException
     #this function deletes an event that the user specifies and updates the file, again with custom exception handling
 
-    def add_attendee(self, event_id, attendee_name):
+    def add_attendee(self, event_id, attendee_name, attendee_age, attendee_gender, attendee_contact):
         if event_id in self.__events:
             event = self.__events[event_id]
-            attendee = Attendee(attendee_name)
+            attendee = Attendee(attendee_name, attendee_age, attendee_gender, attendee_contact)
             event.add_attendee(attendee)
             self.write_to_file()
             print(f"{attendee_name} added to event {event._Event__name}.")
@@ -213,7 +244,10 @@ class EventManager:
         if event_id in self.__events:
             event = self.__events[event_id]
             for attendee in event._Event__attendees:
-                print(attendee.get_name)
+                print(f"Attendee Name: {attendee.get_name}"
+                      f"Attemdee Age: {attendee.age}"
+                      f"Attendee Gender: {attendee.gender}"
+                      f"Attendee Contact Info: {attendee.contact}")
         else:
             raise EventNotFoundException
     #this function will list all of the attendees for a specific event using the method included in the attendee class
