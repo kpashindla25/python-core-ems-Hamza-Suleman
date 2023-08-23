@@ -1,6 +1,8 @@
 #Recreating my event management webapp using more OOP fundamentals and abstraction techniques
 
 import json
+#im using a json file for this task as they are known to be the best for file handling
+#especially when using dicionaries as i plan to use
 
 #This code recreates the webbapp from the previous versions but uses classes for each event and attendee
 #I have also used abstraction to protect the inner workings of each class and their attributes
@@ -30,7 +32,7 @@ class Event:
         self.__name = name
 
     def __del__(self):
-        pass  # Optionally handle cleanup actions here, such as saving data
+        pass  #Optionally handle cleanup actions here, such as saving data, this solved some issues with duplicate data
 #This class encapsulates an event, it stores the event details and includes a method for adding attendees
 #In order to output the details of an event the get_event_info method is used to call the protected attributes
 #The set_name method is used to set the abstracted name for the event without cuasing name mangaling issues
@@ -65,6 +67,7 @@ class EventManager:
             for event_id, event in self.__events.items()
         }
         #This adds the event information and attendees information to the dictionary and writes it to the file
+        #dump() is how python converts text into json format for saving
         with open('events.json', 'w') as f:
             json.dump(events_data, f)
         #This method deals with file handling, it writes to the file from the working program memory
@@ -72,6 +75,10 @@ class EventManager:
     def list_events(self):
         for event_id, event in sorted(self.__events.items()):
             print(event.get_event_info())
+    #this function prints out all of the events saved in the file
+    #it uses the dictionary to print the event id and the name of the event
+    #the sorted command ensures the events are sorted by id number
+    #the function uses the method in the event class to return the event info as it is protected due to abstraction
 
     def create_event(self, event_id, name):
         if event_id in self.__events:
@@ -82,6 +89,8 @@ class EventManager:
         self.__events[event_id] = new_event
         self.write_to_file()
         print(f"Event '{name}' created.")
+    #this will create an event by creating a new key in the dictionary in the json file and then write it to file
+    #the method first checks if the event already exists, and if it does it does not add the duplicate
 
     def edit_event(self, event_id, name):
         if event_id in self.__events:
@@ -90,6 +99,8 @@ class EventManager:
             print(f"Event {event_id} name successfully changed to: {name}.")
         else:
             raise EventNotFoundException("Event not found.")
+    #this method will change the name of an event that the user specifies and will write it to the file
+    #custom exception handling is used here instead of a simple print statement, this can help identify specific errors
 
     def delete_event(self, event_id):
         if event_id in self.__events:
@@ -98,6 +109,7 @@ class EventManager:
             print(f"Event {event_id} successfully removed.")
         else:
             raise EventNotFoundException("Event not found.")
+    #this function deletes an event that the user specifies and updates the file, again with custom exception handling
 
     def add_attendee(self, event_id, attendee_name):
         if event_id in self.__events:
@@ -108,6 +120,8 @@ class EventManager:
             print(f"{attendee_name} added to event {event._Event__name}.")
         else:
             raise EventNotFoundException("Event not found.")
+    #this function can add an attendee to a specific event by the id, it also ensures that the attendees get written
+    #to the file along with their specific events
 
     def list_attendees(self, event_id):
         if event_id in self.__events:
@@ -116,7 +130,12 @@ class EventManager:
                 print(attendee.get_name())
         else:
             raise EventNotFoundException("Event not found.")
+    #this function will list all of the attendees for a specific event using the method included in the attendee class
+    #to access protected attributes due to the abstraction techniques employed
 
+    #below is a method that creates the entire front end of the webapp, it alows the user to navigate various functions
+    #and includes custom error handling to deal with exceptions as well as writing all the user inputs
+    #and changes to the file, the webapp includes all the functions outlines in the assessment brief
     def web_app(self):
         while True:
             print("\nEvent Management Web App")
@@ -173,6 +192,7 @@ class EventManager:
 
 event_manager = EventManager()
 event_manager.web_app()
+#to initialise the webapp we first instantiate the EventManager() class, and then run the web_app() method within it
 
 #Overall this program creates the event management system using object oriented programming as much as possible,
 #we have used examples of encapsulation and abstraction mainly. In this code we did not get an opportunity to use
