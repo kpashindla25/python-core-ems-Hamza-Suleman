@@ -15,8 +15,8 @@
 
 - Add getters and setters for each private attribute
 
-- Add print-outs inside the exception class
+- Add print-outs inside the exception class (Complete)
 
 - Add more information for each attendee
 
-- Add a message to the user if they try to list events but there aren't any
+- Add a message to the user if they try to list events but there aren't any (Complete)
