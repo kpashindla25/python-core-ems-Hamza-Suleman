@@ -152,7 +152,7 @@ class EventManager:
                 attendee_gender = attendee_info['gender']
                 attendee_contact = attendee_info['contact']
                 event.add_attendee(Attendee(attendee_name, attendee_age, attendee_gender, attendee_contact))
-            self.__events[event_id] = event2
+            self.__events[event_id] = event
 
     def write_to_file(self):
         events_data = {

@@ -1,10 +1,1 @@
-{
-  "1": {
-    "name": "Event Name",
-    "date": "Event Date",
-    "location": "Event Location",
-    "attendees": [
-      {"name": "Attendee 1", "age": 25, "gender": "Male", "contact": "email@example.com"},
-      {"name": "Attendee 2", "age": 30, "gender": "Female", "contact": "contact@example.com"}
-    ]
-  },
+{"2": {"name": "fggfd", "date": "333", "location": "d", "attendees": []}}
