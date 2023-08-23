@@ -13,7 +13,7 @@
 
 ## To do
 
-- Add getters and setters for each private attribute
+- Add getters and setters for each private attribute (Complete)
 
 - Add print-outs inside the exception class (Complete)
 
