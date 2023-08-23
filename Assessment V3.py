@@ -35,6 +35,13 @@ class Event:
 #In order to output the details of an event the get_event_info method is used to call the protected attributes
 #The set_name method is used to set the abstracted name for the event without cuasing name mangaling issues
 
+class EventNotFoundException(Exception):
+    pass
+#This class is a custom exception, it will be used in the webapp to raise a specific
+#exception when a user tries to query an event that doesnt exist
+#this is useful as we can use this exception to handle this type of error separately from
+#other issues that can arise
+
 class EventManager:
     def __init__(self):
         try:
@@ -82,7 +89,7 @@ class EventManager:
             self.write_to_file()
             print(f"Event {event_id} name successfully changed to: {name}.")
         else:
-            print("Event not found.")
+            raise EventNotFoundException("Event not found.")
 
     def delete_event(self, event_id):
         if event_id in self.__events:
@@ -90,7 +97,7 @@ class EventManager:
             self.write_to_file()
             print(f"Event {event_id} successfully removed.")
         else:
-            print("Event not found.")
+            raise EventNotFoundException("Event not found.")
 
     def add_attendee(self, event_id, attendee_name):
         if event_id in self.__events:
@@ -100,7 +107,7 @@ class EventManager:
             self.write_to_file()
             print(f"{attendee_name} added to event {event._Event__name}.")
         else:
-            print("Event not found.")
+            raise EventNotFoundException("Event not found.")
 
     def list_attendees(self, event_id):
         if event_id in self.__events:
@@ -108,7 +115,7 @@ class EventManager:
             for attendee in event._Event__attendees:
                 print(attendee.get_name())
         else:
-            print("Event not found.")
+            raise EventNotFoundException("Event not found.")
 
     def web_app(self):
         while True:
@@ -130,19 +137,31 @@ class EventManager:
                 name = input("Enter Event Name: ")
                 self.create_event(event_id, name)
             elif choice == '3':
-                event_id = input("Enter Event ID To Edit: ")
-                name = input("Enter New Event Name: ")
-                self.edit_event(event_id, name)
+                try:
+                    event_id = input("Enter Event ID To Edit: ")
+                    name = input("Enter New Event Name: ")
+                    self.edit_event(event_id, name)
+                except EventNotFoundException:
+                    print("Event not found. Please check the event ID and try again.")
             elif choice == '4':
-                event_id = input("Enter Event ID: ")
-                self.delete_event(event_id)
+                try:
+                    event_id = input("Enter Event ID: ")
+                    self.delete_event(event_id)
+                except EventNotFoundException:
+                    print("Event not found. Please check the event ID and try again.")
             elif choice == '5':
-                event_id = input("Enter Event ID: ")
-                attendee_name = input("Enter Attendee Name: ")
-                self.add_attendee(event_id, attendee_name)
+                try:
+                    event_id = input("Enter Event ID: ")
+                    attendee_name = input("Enter Attendee Name: ")
+                    self.add_attendee(event_id, attendee_name)
+                except EventNotFoundException:
+                    print("Event not found. Please check the event ID and try again.")
             elif choice == '6':
-                event_id = input("Enter Event ID: ")
-                self.list_attendees(event_id)
+                try:
+                    event_id = input("Enter Event ID: ")
+                    self.list_attendees(event_id)
+                except EventNotFoundException:
+                    print("Event not found. Please check the event ID and try again.")
             elif choice == '7':
                 print("Exiting...")
                 break
@@ -150,6 +169,7 @@ class EventManager:
                 print("Invalid choice. Please select again.")
 #The above class includes all of the webapp functions like before, the only difference is now it uses the new classes-
 #to call the protected attributes due to the abstraction we have used
+#Each option what requires a user input now includes custom exception handling to check if the input is acceptable
 
 event_manager = EventManager()
 event_manager.web_app()
