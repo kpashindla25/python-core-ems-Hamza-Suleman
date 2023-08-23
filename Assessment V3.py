@@ -43,10 +43,19 @@ class EventManager:
         except (FileNotFoundError, json.JSONDecodeError):
             events_data = {}
         #This is exception handling, it makes sure the program doesnt stop if the file isnt already there
-        self.__events = {event_id: Event(event_id, event_data['name']) for event_id, event_data in events_data.items()}
+        self.__events = {}
+        for event_id, event_data in events_data.items():
+            event = Event(event_id, event_data['name'])
+            for attendee_name in event_data.get('attendees', []):
+                event.add_attendee(Attendee(attendee_name))
+            self.__events[event_id] = event
 
     def write_to_file(self):
-        events_data = {event_id: {'name': event._Event__name} for event_id, event in self.__events.items()}
+        events_data = {
+            event_id: {'name': event._Event__name, 'attendees': [attendee.get_name() for attendee in event._Event__attendees]}
+            for event_id, event in self.__events.items()
+        }
+        #This adds the event information and attendees information to the dictionary and writes it to the file
         with open('events.json', 'w') as f:
             json.dump(events_data, f)
         #This method deals with file handling, it writes to the file from the working program memory
