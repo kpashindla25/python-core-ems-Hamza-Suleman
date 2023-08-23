@@ -50,6 +50,10 @@ class Event:
     def attendees(self):
         return self.__attendees
 
+    @attendees.setter
+    def attendees(self,new_attendee):
+        self.__attendees = new_attendee
+
     def get_event_info(self):
         return f"Event ID: {self.__event_id} | Event Name: {self.__name} | Number of Attendees: {len(self.__attendees)}"
 
