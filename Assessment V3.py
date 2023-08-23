@@ -22,9 +22,11 @@ class Attendee:
 #This class encapsulates the attendees, and includes a method get_name for accessing the protected attribute 'name'
 
 class Event:
-    def __init__(self, event_id, name):
+    def __init__(self, event_id, name, date, location):
         self.__event_id = event_id
         self.__name = name
+        self.__date = date
+        self.__location = location
         self.__attendees = []
 
     @property
@@ -43,6 +45,22 @@ class Event:
     def name(self, new_name):
         self.__name = new_name
 
+    @property
+    def date(self):
+        return self.__date
+
+    @date.setter
+    def date(self, new_date):
+        self.__date = new_date
+
+    @property
+    def location(self):
+        return self.__location
+
+    @location.setter
+    def location(self, new_location):
+        self.__location = new_location
+
     def add_attendee(self, attendee):
         self.__attendees.append(attendee)
 
@@ -55,7 +73,12 @@ class Event:
         self.__attendees = new_attendee
 
     def get_event_info(self):
-        return f"Event ID: {self.__event_id} | Event Name: {self.__name} | Number of Attendees: {len(self.__attendees)}"
+        return (f"Event ID: {self.__event_id}\n"
+                f"Event Name: {self.__name}\n"
+                f"Event Date: {self.__date}\n"
+                f"Event Location {self.__location}\n"
+                f"Number of Attendees: {len(self.__attendees)}\n"
+                f"------------------------------------------")
 
     def set_name(self, name):
         self.__name = name
@@ -87,14 +110,19 @@ class EventManager:
         #This is exception handling, it makes sure the program doesnt stop if the file isnt already there
         self.__events = {}
         for event_id, event_data in events_data.items():
-            event = Event(event_id, event_data['name'])
+            event = Event(event_id, event_data['name'], event_data['date'], event_data['location'])
             for attendee_name in event_data.get('attendees', []):
                 event.add_attendee(Attendee(attendee_name))
             self.__events[event_id] = event
 
     def write_to_file(self):
         events_data = {
-            event_id: {'name': event._Event__name, 'attendees': [attendee.get_name for attendee in event._Event__attendees]}
+            event_id: {
+                'name': event.name,
+                'date': event.date,
+                'location': event.location,
+                'attendees': [attendee.get_name for attendee in event.attendees]
+            }
             for event_id, event in self.__events.items()
         }
         #This adds the event information and attendees information to the dictionary and writes it to the file
@@ -114,19 +142,19 @@ class EventManager:
     #the sorted command ensures the events are sorted by id number
     #the function uses the method in the event class to return the event info as it is protected due to abstraction
 
-    def create_event(self, event_id, name):
+    def create_event(self, event_id, name, date, location):
         if event_id in self.__events:
             print("Event ID already exists.")
             return
 
-        new_event = Event(event_id, name)
+        new_event = Event(event_id, name, date, location)
         self.__events[event_id] = new_event
         self.write_to_file()
         print(f"Event '{name}' created.")
     #this will create an event by creating a new key in the dictionary in the json file and then write it to file
     #the method first checks if the event already exists, and if it does it does not add the duplicate
 
-    def edit_event(self, event_id, name):
+    def edit_event_name(self, event_id, name):
         if event_id in self.__events:
             self.__events[event_id]._Event__name = name
             self.write_to_file()
@@ -135,6 +163,22 @@ class EventManager:
             raise EventNotFoundException
     #this method will change the name of an event that the user specifies and will write it to the file
     #custom exception handling is used here instead of a simple print statement, this can help identify specific errors
+
+    def edit_event_date(self, event_id, date):
+        if event_id in self.__events:
+            self.__events[event_id]._Event__date = date
+            self.write_to_file()
+            print(f"Event {event_id} date successfully changed to: {date}.")
+        else:
+            raise EventNotFoundException
+
+    def edit_event_location(self, event_id, location):
+        if event_id in self.__events:
+            self.__events[event_id]._Event__location = location
+            self.write_to_file()
+            print(f"Event {event_id} location successfully changed to: {location}.")
+        else:
+            raise EventNotFoundException
 
     def delete_event(self, event_id):
         if event_id in self.__events:
@@ -188,14 +232,34 @@ class EventManager:
             elif choice == '2':
                 event_id = input("Enter Event ID: ")
                 name = input("Enter Event Name: ")
-                self.create_event(event_id, name)
+                date = input("Enter Event Date: (dd/mm/yyyy) ")
+                location = input("Enter Event Location: ")
+                self.create_event(event_id, name, date, location)
             elif choice == '3':
-                try:
-                    event_id = input("Enter Event ID To Edit: ")
-                    name = input("Enter New Event Name: ")
-                    self.edit_event(event_id, name)
-                except EventNotFoundException as e:
-                    print(e)
+                event_id = input("Enter Event ID To Edit: ")
+                print(f"\nWhat would you like to edit for Event {event_id}?")
+                print("1. Event Name")
+                print("2. Event Date")
+                print("3. Event Location")
+                edit_choice = input("Select an option: ")
+                if edit_choice == '1':
+                    try:
+                        name = input("Enter New Event Name: ")
+                        self.edit_event_name(event_id, name)
+                    except EventNotFoundException as e:
+                        print(e)
+                elif edit_choice == '2':
+                    try:
+                        date = input("Enter New Event Date: ")
+                        self.edit_event_date(event_id, date)
+                    except EventNotFoundException as e:
+                        print(e)
+                elif edit_choice == '3':
+                    try:
+                        location = input("Enter New Event Location: ")
+                        self.edit_event_location(event_id, location)
+                    except EventNotFoundException as e:
+                        print(e)
             elif choice == '4':
                 try:
                     event_id = input("Enter Event ID: ")
