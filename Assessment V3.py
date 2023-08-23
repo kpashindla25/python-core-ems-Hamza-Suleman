@@ -40,8 +40,10 @@ class EventManager:
         try:
             with open('events.json', 'r') as f:
                 events_data = json.load(f)
+            print("Data Loaded Successfully!")
         except (FileNotFoundError, json.JSONDecodeError):
             events_data = {}
+            print("Creating Database...")
         #This is exception handling, it makes sure the program doesnt stop if the file isnt already there
         self.__events = {}
         for event_id, event_data in events_data.items():
