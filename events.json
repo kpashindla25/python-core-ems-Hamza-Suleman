@@ -1,1 +1,15 @@
-{"1": {"name": "First Event (Edit)", "date": "22/22/2222", "location": "Manchester", "attendees": ["Person 1"]}}
+{
+    "1": {
+        "name": "1",
+        "date": "1",
+        "location": "1",
+        "attendees": [
+            {
+                "name": "a",
+                "age": "a",
+                "gender": "a",
+                "contact": "a"
+            }
+        ]
+    }
+}
