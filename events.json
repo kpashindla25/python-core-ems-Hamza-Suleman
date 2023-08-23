@@ -1,1 +1,1 @@
-{"1": {"name": "First Event (Edited)", "attendees": ["First Attendee", "Second Attendee"]}}
+{"1": {"name": "First Event", "attendees": ["Attendee 1", "Attendee 2"]}, "2": {"name": "Second Event", "attendees": ["Attendee A", "Attendee B", "Attendee C"]}, "3": {"name": "Third Event", "attendees": ["Person X", "Person Y"]}}
