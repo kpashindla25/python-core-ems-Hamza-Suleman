@@ -151,7 +151,8 @@ class EventManager:
                 event_data['date'],
                 event_data['location']
             )
-            for attendee_info in event_data.get('attendees', []):
+            attendees = event_data.get('attendees', [])
+            for attendee_info in attendees:
                 attendee = Attendee(
                     attendee_info['name'],
                     attendee_info['age'],
@@ -162,19 +163,28 @@ class EventManager:
             self.__events[event_id] = event
 
     def write_to_file(self):
-        events_data = {
-            event_id: {
+        events_data = {}
+        for event_id, event in self.__events.items():
+            attendees_data = [
+                {
+                    'name': attendee.get_name,
+                    'age': attendee.age,
+                    'gender': attendee.gender,
+                    'contact': attendee.contact
+                }
+                for attendee in event.attendees
+            ]
+
+            events_data[event_id] = {
                 'name': event.name,
                 'date': event.date,
                 'location': event.location,
-                'attendees': [attendee.get_name for attendee in event.attendees]
+                'attendees': attendees_data
             }
-            for event_id, event in self.__events.items()
-        }
         #This adds the event information and attendees information to the dictionary and writes it to the file
         #dump() is how python converts text into json format for saving
         with open('events.json', 'w') as f:
-            json.dump(events_data, f)
+            json.dump(events_data, f, indent=4)
         #This method deals with file handling, it writes to the file from the working program memory
 
     def list_events(self):
