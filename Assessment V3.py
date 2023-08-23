@@ -114,15 +114,8 @@ class Event:
                 return True
         return False
     #this method allows the webapp to delete an attendee from a specific event using their name
-
-    def set_name(self, name):
-        self.__name = name
-
-    def __del__(self):
-        pass  #Optionally handle cleanup actions here, such as saving data, this solved some issues with duplicate data
 #This class encapsulates an event, it stores the event details and includes a method for adding attendees
 #In order to output the details of an event the get_event_info method is used to call the protected attributes
-#The set_name method is used to set the abstracted name for the event without cuasing name mangaling issues
 
 class EventNotFoundException(Exception):
     def __str__(self):
