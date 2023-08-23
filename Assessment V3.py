@@ -12,8 +12,13 @@ class Attendee:
     def __init__(self, name):
         self.__name = name
 
+    @property
     def get_name(self):
         return self.__name
+
+    @get_name.setter
+    def get_name(self,new_name):
+        self.__name = new_name
 #This class encapsulates the attendees, and includes a method get_name for accessing the protected attribute 'name'
 
 class Event:
@@ -22,8 +27,28 @@ class Event:
         self.__name = name
         self.__attendees = []
 
+    @property
+    def event_id(self):
+        return self.__event_id
+
+    @event_id.setter
+    def event_id(self, new_id):
+        self.__event_id = new_id
+
+    @property
+    def name(self):
+        return self.__name
+
+    @name.setter
+    def name(self, new_name):
+        self.__name = new_name
+
     def add_attendee(self, attendee):
         self.__attendees.append(attendee)
+
+    @property
+    def attendees(self):
+        return self.__attendees
 
     def get_event_info(self):
         return f"Event ID: {self.__event_id} | Event Name: {self.__name} | Number of Attendees: {len(self.__attendees)}"
@@ -65,7 +90,7 @@ class EventManager:
 
     def write_to_file(self):
         events_data = {
-            event_id: {'name': event._Event__name, 'attendees': [attendee.get_name() for attendee in event._Event__attendees]}
+            event_id: {'name': event._Event__name, 'attendees': [attendee.get_name for attendee in event._Event__attendees]}
             for event_id, event in self.__events.items()
         }
         #This adds the event information and attendees information to the dictionary and writes it to the file
@@ -132,7 +157,7 @@ class EventManager:
         if event_id in self.__events:
             event = self.__events[event_id]
             for attendee in event._Event__attendees:
-                print(attendee.get_name())
+                print(attendee.get_name)
         else:
             raise EventNotFoundException
     #this function will list all of the attendees for a specific event using the method included in the attendee class
