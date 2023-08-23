@@ -26,7 +26,7 @@ def list_events():
         print(f"Event ID: {event_id} | Event Name: {event['name']} | Number of Attendees: {len(event['attendees'])}")
 #this function prints out all of the events saved in the file
 #it uses the dictionary to print the event id and the name of the event
-#th sorted command ensures the events are sorted by id number
+#the sorted command ensures the events are sorted by id number
 
 def create_event(event_id, name):
     events[event_id] = {'name': name, 'attendees': []}
