@@ -38,11 +38,13 @@ class Event:
 #The set_name method is used to set the abstracted name for the event without cuasing name mangaling issues
 
 class EventNotFoundException(Exception):
-    pass
+    def __str__(self):
+        return f"Event was not found. Please check the event ID and try again."
 #This class is a custom exception, it will be used in the webapp to raise a specific
 #exception when a user tries to query an event that doesnt exist
 #this is useful as we can use this exception to handle this type of error separately from
 #other issues that can arise
+#The exception prints an error statement when the class is called
 
 class EventManager:
     def __init__(self):
@@ -73,8 +75,11 @@ class EventManager:
         #This method deals with file handling, it writes to the file from the working program memory
 
     def list_events(self):
-        for event_id, event in sorted(self.__events.items()):
-            print(event.get_event_info())
+        if len(self.__events.items()) > 0:
+            for event_id, event in sorted(self.__events.items()):
+                print(event.get_event_info())
+        else:
+            print("There are no current events! Please press 2 to create a new event.")
     #this function prints out all of the events saved in the file
     #it uses the dictionary to print the event id and the name of the event
     #the sorted command ensures the events are sorted by id number
@@ -98,7 +103,7 @@ class EventManager:
             self.write_to_file()
             print(f"Event {event_id} name successfully changed to: {name}.")
         else:
-            raise EventNotFoundException("Event not found.")
+            raise EventNotFoundException
     #this method will change the name of an event that the user specifies and will write it to the file
     #custom exception handling is used here instead of a simple print statement, this can help identify specific errors
 
@@ -108,7 +113,7 @@ class EventManager:
             self.write_to_file()
             print(f"Event {event_id} successfully removed.")
         else:
-            raise EventNotFoundException("Event not found.")
+            raise EventNotFoundException
     #this function deletes an event that the user specifies and updates the file, again with custom exception handling
 
     def add_attendee(self, event_id, attendee_name):
@@ -119,7 +124,7 @@ class EventManager:
             self.write_to_file()
             print(f"{attendee_name} added to event {event._Event__name}.")
         else:
-            raise EventNotFoundException("Event not found.")
+            raise EventNotFoundException
     #this function can add an attendee to a specific event by the id, it also ensures that the attendees get written
     #to the file along with their specific events
 
@@ -129,7 +134,7 @@ class EventManager:
             for attendee in event._Event__attendees:
                 print(attendee.get_name())
         else:
-            raise EventNotFoundException("Event not found.")
+            raise EventNotFoundException
     #this function will list all of the attendees for a specific event using the method included in the attendee class
     #to access protected attributes due to the abstraction techniques employed
 
@@ -160,27 +165,27 @@ class EventManager:
                     event_id = input("Enter Event ID To Edit: ")
                     name = input("Enter New Event Name: ")
                     self.edit_event(event_id, name)
-                except EventNotFoundException:
-                    print("Event not found. Please check the event ID and try again.")
+                except EventNotFoundException as e:
+                    print(e)
             elif choice == '4':
                 try:
                     event_id = input("Enter Event ID: ")
                     self.delete_event(event_id)
-                except EventNotFoundException:
-                    print("Event not found. Please check the event ID and try again.")
+                except EventNotFoundException as e:
+                    print(e)
             elif choice == '5':
                 try:
                     event_id = input("Enter Event ID: ")
                     attendee_name = input("Enter Attendee Name: ")
                     self.add_attendee(event_id, attendee_name)
-                except EventNotFoundException:
-                    print("Event not found. Please check the event ID and try again.")
+                except EventNotFoundException as e:
+                    print(e)
             elif choice == '6':
                 try:
                     event_id = input("Enter Event ID: ")
                     self.list_attendees(event_id)
-                except EventNotFoundException:
-                    print("Event not found. Please check the event ID and try again.")
+                except EventNotFoundException as e:
+                    print(e)
             elif choice == '7':
                 print("Exiting...")
                 break
