@@ -41,7 +41,7 @@ class Attendee:
 
     @property
     def contact(self):
-        return self.contact
+        return self.__contact
 
     @contact.setter
     def contact(self,new_contact):
@@ -100,10 +100,10 @@ class Event:
         self.__attendees = new_attendee
 
     def get_event_info(self):
-        return (f"Event ID: {self.__event_id}\n"
+        return (f"\nEvent ID: {self.__event_id}\n"
                 f"Event Name: {self.__name}\n"
                 f"Event Date: {self.__date}\n"
-                f"Event Location {self.__location}\n"
+                f"Event Location: {self.__location}\n"
                 f"Number of Attendees: {len(self.__attendees)}\n"
                 f"------------------------------------------")
 
@@ -136,7 +136,7 @@ class EventNotFoundException(Exception):
 class EventManager:
     def __init__(self):
         try:
-            with open('events.json', 'r') as f:
+            with open('events.json', 'r', encoding='utf-8') as f:
                 events_data = json.load(f)
             print("Data Loaded Successfully!")
         except (FileNotFoundError, json.JSONDecodeError):
@@ -145,13 +145,20 @@ class EventManager:
         #This is exception handling, it makes sure the program doesnt stop if the file isnt already there
         self.__events = {}
         for event_id, event_data in events_data.items():
-            event = Event(event_id, event_data['name'], event_data['date'], event_data['location'])
+            event = Event(
+                event_id,
+                event_data['name'],
+                event_data['date'],
+                event_data['location']
+            )
             for attendee_info in event_data.get('attendees', []):
-                attendee_name = attendee_info['name']
-                attendee_age = attendee_info['age']
-                attendee_gender = attendee_info['gender']
-                attendee_contact = attendee_info['contact']
-                event.add_attendee(Attendee(attendee_name, attendee_age, attendee_gender, attendee_contact))
+                attendee = Attendee(
+                    attendee_info['name'],
+                    attendee_info['age'],
+                    attendee_info['gender'],
+                    attendee_info['contact']
+                )
+                event.add_attendee(attendee)
             self.__events[event_id] = event
 
     def write_to_file(self):
@@ -244,10 +251,10 @@ class EventManager:
         if event_id in self.__events:
             event = self.__events[event_id]
             for attendee in event._Event__attendees:
-                print(f"Attendee Name: {attendee.get_name}"
-                      f"Attemdee Age: {attendee.age}"
-                      f"Attendee Gender: {attendee.gender}"
-                      f"Attendee Contact Info: {attendee.contact}")
+                print(f"\nAttendee Name: {attendee.get_name}\n"
+                      f"Attendee Age: {attendee.age}\n"
+                      f"Attendee Gender: {attendee.gender}\n"
+                      f"Attendee Contact Info: {attendee.contact}\n")
         else:
             raise EventNotFoundException
     #this function will list all of the attendees for a specific event using the method included in the attendee class
@@ -325,7 +332,10 @@ class EventManager:
                 try:
                     event_id = input("Enter Event ID: ")
                     attendee_name = input("Enter Attendee Name: ")
-                    self.add_attendee(event_id, attendee_name)
+                    attendee_age = input("Enter Attendee Age: ")
+                    attendee_gender = input("Enter Attendee Gender: ")
+                    attendee_contact = input("Enter Attendee Contact: ")
+                    self.add_attendee(event_id, attendee_name, attendee_age, attendee_gender, attendee_contact)
                 except EventNotFoundException as e:
                     print(e)
             elif choice == '6':
@@ -337,7 +347,7 @@ class EventManager:
             elif choice == '7' :
                 try:
                     event_id = input("Enter Event ID: ")
-                    print(f"\nThese are the attendees currently in Event {event_id}")
+                    print(f"\nThese are the attendees currently in Event {event_id}:")
                     self.list_attendees(event_id)
                     print(f"\nWhich attendee would you like to delete?")
                     attendee_name = input("Attendee Full Name: ")
