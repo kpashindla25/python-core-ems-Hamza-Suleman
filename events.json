@@ -1,14 +1,46 @@
 {
     "1": {
-        "name": "1",
-        "date": "1",
-        "location": "1",
+        "name": "First Event",
+        "date": "11/23/2023",
+        "location": "London",
         "attendees": [
             {
                 "name": "a",
                 "age": "a",
                 "gender": "a",
                 "contact": "a"
+            }
+        ]
+    },
+    "2": {
+        "name": "Event 1",
+        "date": "2023-08-23",
+        "location": "Venue A",
+        "attendees": [
+            {
+                "name": "Alice",
+                "age": "25",
+                "gender": "Female",
+                "contact": "alice@example.com"
+            },
+            {
+                "name": "Bob",
+                "age": "30",
+                "gender": "Male",
+                "contact": "bob@example.com"
+            }
+        ]
+    },
+    "3": {
+        "name": "Event 2",
+        "date": "2023-09-15",
+        "location": "Venue B",
+        "attendees": [
+            {
+                "name": "Eve",
+                "age": "28",
+                "gender": "Female",
+                "contact": "eve@example.com"
             }
         ]
     }
