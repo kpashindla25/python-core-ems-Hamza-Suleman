@@ -9,8 +9,7 @@ import json
 #I have also used abstraction to protect the inner workings of each class and their attributes
 #This is an example of using the 4 pillars of OOP, mostly throught the use of encapsulation and abstraction
 
-'''
-class NameClass(ABC):
+class SetName(ABC):
     def __init__(self,name):
         self.__name = name
     
@@ -19,24 +18,32 @@ class NameClass(ABC):
         return self.__name
     
     @name.setter
-    def 
+    def name(self,new_name):
+        self.__name = new_name
 
-'''
+    @abstractmethod
+    def get_name(self):
+        pass
+#This SetName class has been added to showcase the four principles of OOP more clearly,
+#this class contains an abstract method to get and set a name attribute, it is best practise
+#to avoid repeating code in Python so this class allows me to reuse this method and inherit this class
+#to set the name attribute for both the attribute and event classes
+#As this code is reusable for multiple purposes it serves as an example of polymophism,
+#in addition to this, the class uses an abstract method which shows the use of abstraction as well as
+#being used in both the event and attendee classes through the use of inheritance where SetName is the
+#parent class. Finally, the whole program shows encapsulation with the use of classes, objects,
+#private variables and methods to get, set and call various attributes, all while maintaining
+#readable, maintainable and working code that fits every criteria in the requirements.
 
-class Attendee:
+class Attendee(SetName):
     def __init__(self, name, age, gender, contact):
-        self.__name = name
+        super().__init__(name)
         self.__age = age
         self.__gender = gender
         self.__contact = contact
 
-    @property
-    def name(self):
-        return self.__name
-
-    @name.setter
-    def name(self,new_name):
-        self.__name = new_name
+    def get_name(self):
+        return self.name
 
     @property
     def age(self):
@@ -63,16 +70,16 @@ class Attendee:
         self.__contact = new_contact
 
     def get_attendee_info(self):
-        return  (f"\nAttendee Name: {self.__name}\n"
+        return  (f"\nAttendee Name: {self.get_name()}\n"
                 f"Attendee Age: {self.__age}\n"
                 f"Attendee Gender: {self.__gender}\n"
                 f"Attendee Contact Info: {self.__contact}\n")
 #This class encapsulates the attendees, and includes a method name for accessing the protected attribute 'name'
 
-class Event:
+class Event(SetName):
     def __init__(self, event_id, name, date, location):
+        super().__init__(name)
         self.__event_id = event_id
-        self.__name = name
         self.__date = date
         self.__location = location
         self.__attendees = []
@@ -85,13 +92,8 @@ class Event:
     def event_id(self, new_id):
         self.__event_id = new_id
 
-    @property
-    def name(self):
-        return self.__name
-
-    @name.setter
-    def name(self, new_name):
-        self.__name = new_name
+    def get_name(self):
+        return self.name
 
     @property
     def date(self):
@@ -122,7 +124,7 @@ class Event:
 
     def get_event_info(self):
         return (f"\nEvent ID: {self.__event_id}\n"
-                f"Event Name: {self.__name}\n"
+                f"Event Name: {self.get_name()}\n"
                 f"Event Date: {self.__date}\n"
                 f"Event Location: {self.__location}\n"
                 f"Number of Attendees: {len(self.__attendees)}\n"
@@ -226,7 +228,8 @@ class EventManager:
 
     def edit_event_name(self, event_id, name):
         if event_id in self.__events:
-            self.__events[event_id]._Event__name = name
+            event = self.__events[event_id]
+            event.name = name
             self.write_to_file()
             print(f"Event {event_id} name successfully changed to: {name}.")
         else:
@@ -265,7 +268,7 @@ class EventManager:
             attendee = Attendee(attendee_name, attendee_age, attendee_gender, attendee_contact)
             event.add_attendee(attendee)
             self.write_to_file()
-            print(f"{attendee_name} added to event {event._Event__name}.")
+            print(f"{attendee_name} added to event {event.name}.")
         else:
             raise EventNotFoundException
     #this function can add an attendee to a specific event by the id, it also ensures that the attendees get written
@@ -343,6 +346,8 @@ class EventManager:
                         self.edit_event_location(event_id, location)
                     except EventNotFoundException as e:
                         print(e)
+                else:
+                    print("Invalid choice...")
             elif choice == '4':
                 try:
                     event_id = input("Enter Event ID: ")
