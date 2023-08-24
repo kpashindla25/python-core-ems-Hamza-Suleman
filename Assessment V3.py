@@ -257,9 +257,10 @@ class EventManager:
 
     def delete_event(self, event_id):
         if event_id in self.__events:
+            event_name = self.__events[event_id].get_name()
             del self.__events[event_id]
             self.write_to_file()
-            print(f"Event {event_id} successfully removed.")
+            print(f"Event {event_id} '{event_name}' successfully removed.")
         else:
             raise EventNotFoundException
     #this function deletes an event that the user specifies and updates the file, again with custom exception handling
@@ -278,9 +279,13 @@ class EventManager:
 
     def list_attendees(self, event_id):
         if event_id in self.__events:
+            event_name = self.__events[event_id].get_name()
             event = self.__events[event_id]
-            for attendee in event._Event__attendees:
-                print(attendee.get_attendee_info())
+            if event._Event__attendees:
+                for attendee in event._Event__attendees:
+                    print(attendee.get_attendee_info())
+            else:
+                print(f"There are currently no attendees for '{event_name}'! Please press 5 to add attendees.")
         else:
             raise EventNotFoundException
     #this function will list all of the attendees for a specific event using the method included in the attendee class
@@ -291,9 +296,9 @@ class EventManager:
             event = self.__events[event_id]
             if event.delete_attendee(attendee_name):
                 self.write_to_file()
-                print(f"{attendee_name} successfully removed from event {event.event_id}.")
+                print(f"'{attendee_name}' successfully removed from event {event.event_id}.")
             else:
-                print(f"{attendee_name} not found in event {event.event_id}.")
+                print(f"'{attendee_name}' not found in event {event.event_id}.")
         else:
             raise EventNotFoundException
     #this method allows the user to choose to delete an attendee and writes the changes to the file
