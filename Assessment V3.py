@@ -1,5 +1,6 @@
 #Recreating my event management webapp using more OOP fundamentals and abstraction techniques
 
+from abc import ABC, abstractmethod
 import json
 #im using a json file for this task as they are known to be the best for file handling
 #especially when using dicionaries as i plan to use
@@ -7,6 +8,20 @@ import json
 #This code recreates the webbapp from the previous versions but uses classes for each event and attendee
 #I have also used abstraction to protect the inner workings of each class and their attributes
 #This is an example of using the 4 pillars of OOP, mostly throught the use of encapsulation and abstraction
+
+'''
+class NameClass(ABC):
+    def __init__(self,name):
+        self.__name = name
+    
+    @property
+    def name(self):
+        return self.__name
+    
+    @name.setter
+    def 
+
+'''
 
 class Attendee:
     def __init__(self, name, age, gender, contact):
@@ -16,11 +31,11 @@ class Attendee:
         self.__contact = contact
 
     @property
-    def get_name(self):
+    def name(self):
         return self.__name
 
-    @get_name.setter
-    def get_name(self,new_name):
+    @name.setter
+    def name(self,new_name):
         self.__name = new_name
 
     @property
@@ -46,7 +61,13 @@ class Attendee:
     @contact.setter
     def contact(self,new_contact):
         self.__contact = new_contact
-#This class encapsulates the attendees, and includes a method get_name for accessing the protected attribute 'name'
+
+    def get_attendee_info(self):
+        return  (f"\nAttendee Name: {self.__name}\n"
+                f"Attendee Age: {self.__age}\n"
+                f"Attendee Gender: {self.__gender}\n"
+                f"Attendee Contact Info: {self.__contact}\n")
+#This class encapsulates the attendees, and includes a method name for accessing the protected attribute 'name'
 
 class Event:
     def __init__(self, event_id, name, date, location):
@@ -109,7 +130,7 @@ class Event:
 
     def delete_attendee(self, attendee_name):
         for attendee in self.__attendees:
-            if attendee.get_name == attendee_name:
+            if attendee.name == attendee_name:
                 self.__attendees.remove(attendee)
                 return True
         return False
@@ -160,7 +181,7 @@ class EventManager:
         for event_id, event in self.__events.items():
             attendees_data = [
                 {
-                    'name': attendee.get_name,
+                    'name': attendee.name,
                     'age': attendee.age,
                     'gender': attendee.gender,
                     'contact': attendee.contact
@@ -254,10 +275,7 @@ class EventManager:
         if event_id in self.__events:
             event = self.__events[event_id]
             for attendee in event._Event__attendees:
-                print(f"\nAttendee Name: {attendee.get_name}\n"
-                      f"Attendee Age: {attendee.age}\n"
-                      f"Attendee Gender: {attendee.gender}\n"
-                      f"Attendee Contact Info: {attendee.contact}\n")
+                print(attendee.get_attendee_info())
         else:
             raise EventNotFoundException
     #this function will list all of the attendees for a specific event using the method included in the attendee class
