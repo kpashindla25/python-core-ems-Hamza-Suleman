@@ -20,3 +20,5 @@
 - Add more information for each attendee (Complete! - This was tough lol)
 
 - Add a message to the user if they try to list events but there aren't any (Complete)
+
+- Add custom error handling to check input format for dates
