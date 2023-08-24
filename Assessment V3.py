@@ -156,6 +156,10 @@ class IncorrectDateFormat(Exception):
     def __str__(self):
         return f"This input is incorrect, please enter the date in the format (dd/mm/yyyy)."
 
+class IncorrectTextFormat(Exception):
+    def __str__(self):
+        return f"This input is incorrect, please enter text characters only."
+
 class EventManager:
     def __init__(self):
         try:
@@ -251,6 +255,12 @@ class EventManager:
         except ValueError:
             raise IncorrectDateFormat
 
+    def check_text_format(self,text):
+        if all(char.isalpha() or char.isspace() for char in text):
+            pass
+        else:
+            raise IncorrectTextFormat
+
     def edit_event_date(self, event_id, date):
         if event_id in self.__events:
             self.__events[event_id]._Event__date = date
@@ -338,11 +348,14 @@ class EventManager:
                 try:
                     event_id = input("Enter Event ID: ")
                     name = input("Enter Event Name: ")
+                    self.check_text_format(name)
                     date = input("Enter Event Date: (dd/mm/yyyy) ")
                     self.check_date_format(date)
                     location = input("Enter Event Location: ")
                     self.create_event(event_id, name, date, location)
                 except IncorrectDateFormat as I:
+                    print(I)
+                except IncorrectTextFormat as I:
                     print(I)
             elif choice == '3':
                 try:
@@ -355,9 +368,10 @@ class EventManager:
                     if edit_choice == '1':
                         try:
                             name = input("Enter New Event Name: ")
+                            self.check_text_format(name)
                             self.edit_event_name(event_id, name)
-                        except:
-                            pass
+                        except IncorrectTextFormat as I:
+                            print(I)
                     elif edit_choice == '2':
                         try:
                             date = input("Enter New Event Date: ")
@@ -368,9 +382,10 @@ class EventManager:
                     elif edit_choice == '3':
                         try:
                             location = input("Enter New Event Location: ")
+                            self.check_text_format(location)
                             self.edit_event_location(event_id, location)
-                        except:
-                            pass
+                        except IncorrectTextFormat as I:
+                            print(I)
                     else:
                         print("Invalid choice...")
                 except EventNotFoundException as e:
@@ -385,12 +400,15 @@ class EventManager:
                 try:
                     event_id = input("Enter Event ID: ")
                     attendee_name = input("Enter Attendee Name: ")
+                    self.check_text_format(attendee_name)
                     attendee_age = input("Enter Attendee Age: ")
                     attendee_gender = input("Enter Attendee Gender: ")
                     attendee_contact = input("Enter Attendee Contact: ")
                     self.add_attendee(event_id, attendee_name, attendee_age, attendee_gender, attendee_contact)
                 except EventNotFoundException as e:
                     print(e)
+                except IncorrectTextFormat as I:
+                    print(I)
             elif choice == '6':
                 try:
                     event_id = input("Enter Event ID: ")
