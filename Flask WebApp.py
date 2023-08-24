@@ -3,7 +3,3 @@
 from flask import Flask
 
 EventManager = Flask(__name__)
-
-@EventManager.route('/')
-def hello():
-    return 'Hello World!'
