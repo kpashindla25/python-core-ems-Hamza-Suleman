@@ -44,6 +44,7 @@ class Attendee(SetName):
 
     def get_name(self):
         return self.name
+    #this calls the abstract method from the SetName class
 
     @property
     def age(self):
@@ -94,6 +95,7 @@ class Event(SetName):
 
     def get_name(self):
         return self.name
+    #this calls the abstract method from the SetName class
 
     @property
     def date(self):
