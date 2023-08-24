@@ -1,6 +1,7 @@
 #Recreating my event management webapp using more OOP fundamentals and abstraction techniques
 
 from abc import ABC, abstractmethod
+import datetime
 import json
 #im using a json file for this task as they are known to be the best for file handling
 #especially when using dicionaries as i plan to use
@@ -151,6 +152,10 @@ class EventNotFoundException(Exception):
 #other issues that can arise
 #The exception prints an error statement when the class is called
 
+class IncorrectDateFormat(Exception):
+    def __str__(self):
+        return f"This input is incorrect, please enter the date in the format (dd/mm/yyyy)."
+
 class EventManager:
     def __init__(self):
         try:
@@ -239,6 +244,13 @@ class EventManager:
     #this method will change the name of an event that the user specifies and will write it to the file
     #custom exception handling is used here instead of a simple print statement, this can help identify specific errors
 
+    def check_date_format(self,date):
+        format = "%d/%m/%Y"
+        try:
+            datetime.datetime.strptime(date, format)
+        except ValueError:
+            raise IncorrectDateFormat
+
     def edit_event_date(self, event_id, date):
         if event_id in self.__events:
             self.__events[event_id]._Event__date = date
@@ -323,38 +335,46 @@ class EventManager:
             if choice == '1':
                 self.list_events()
             elif choice == '2':
-                event_id = input("Enter Event ID: ")
-                name = input("Enter Event Name: ")
-                date = input("Enter Event Date: (dd/mm/yyyy) ")
-                location = input("Enter Event Location: ")
-                self.create_event(event_id, name, date, location)
+                try:
+                    event_id = input("Enter Event ID: ")
+                    name = input("Enter Event Name: ")
+                    date = input("Enter Event Date: (dd/mm/yyyy) ")
+                    self.check_date_format(date)
+                    location = input("Enter Event Location: ")
+                    self.create_event(event_id, name, date, location)
+                except IncorrectDateFormat as I:
+                    print(I)
             elif choice == '3':
-                event_id = input("Enter Event ID To Edit: ")
-                print(f"\nWhat would you like to edit for Event {event_id}?")
-                print("1. Event Name")
-                print("2. Event Date")
-                print("3. Event Location")
-                edit_choice = input("Select an option: ")
-                if edit_choice == '1':
-                    try:
-                        name = input("Enter New Event Name: ")
-                        self.edit_event_name(event_id, name)
-                    except EventNotFoundException as e:
-                        print(e)
-                elif edit_choice == '2':
-                    try:
-                        date = input("Enter New Event Date: ")
-                        self.edit_event_date(event_id, date)
-                    except EventNotFoundException as e:
-                        print(e)
-                elif edit_choice == '3':
-                    try:
-                        location = input("Enter New Event Location: ")
-                        self.edit_event_location(event_id, location)
-                    except EventNotFoundException as e:
-                        print(e)
-                else:
-                    print("Invalid choice...")
+                try:
+                    event_id = input("Enter Event ID To Edit: ")
+                    print(f"\nWhat would you like to edit for Event {event_id}?")
+                    print("1. Event Name")
+                    print("2. Event Date")
+                    print("3. Event Location")
+                    edit_choice = input("Select an option: ")
+                    if edit_choice == '1':
+                        try:
+                            name = input("Enter New Event Name: ")
+                            self.edit_event_name(event_id, name)
+                        except:
+                            pass
+                    elif edit_choice == '2':
+                        try:
+                            date = input("Enter New Event Date: ")
+                            self.check_date_format(date)
+                            self.edit_event_date(event_id, date)
+                        except IncorrectDateFormat as I:
+                            print(I)
+                    elif edit_choice == '3':
+                        try:
+                            location = input("Enter New Event Location: ")
+                            self.edit_event_location(event_id, location)
+                        except:
+                            pass
+                    else:
+                        print("Invalid choice...")
+                except EventNotFoundException as e:
+                    print(e)
             elif choice == '4':
                 try:
                     event_id = input("Enter Event ID: ")
