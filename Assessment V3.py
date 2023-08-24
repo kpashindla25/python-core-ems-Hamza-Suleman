@@ -260,6 +260,8 @@ class EventManager:
             pass
         else:
             raise IncorrectTextFormat
+    #the two above methods call my custom exceptions to verify that the user input is in the correct format
+    #there is one method for checking date formats and one for checking text formats
 
     def edit_event_date(self, event_id, date):
         if event_id in self.__events:
