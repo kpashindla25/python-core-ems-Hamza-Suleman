@@ -220,13 +220,16 @@ class EventManager:
 
     def list_events(self):
         if len(self.__events.items()) > 0:
-            for event_id, event in sorted(self.__events.items()):
+            print(f"Listing {len(self.__events.items())} events in ascending date order...")
+            sorted_events = sorted(self.__events.values(), key=lambda event: event.date)
+            for event in sorted_events:
                 print(event.get_event_info())
         else:
             print("There are no current events! Please press 2 to create a new event.")
     #this function prints out all of the events saved in the file
     #it uses the dictionary to print the event id and the name of the event
-    #the sorted command ensures the events are sorted by id number
+    #the sorted command ensures the events are sorted by date
+    #a lambda function is used to create a temporary list of events that are sorted by their extracted date
     #the function uses the method in the event class to return the event info as it is protected due to abstraction
 
     def create_event(self, event_id, name, date, location):
