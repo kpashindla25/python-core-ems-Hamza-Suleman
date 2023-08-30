@@ -2,6 +2,7 @@
 
 from abc import ABC, abstractmethod
 from datetime import datetime
+import string
 import json
 #im using a json file for this task as they are known to be the best for file handling
 #especially when using dicionaries as i plan to use
@@ -276,7 +277,7 @@ class EventManager:
             raise IncorrectDateFormat
 
     def check_text_format(self,text):
-        if all(char.isalpha() or char.isspace() for char in text):
+        if all(char.isalpha() or char.isspace() or char in string.punctuation for char in text):
             pass
         else:
             raise IncorrectTextFormat
