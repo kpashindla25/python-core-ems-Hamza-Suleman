@@ -160,6 +160,10 @@ class IncorrectTextFormat(Exception):
     def __str__(self):
         return f"This input is incorrect, please enter text characters only."
 
+class AttendeeAlreadyExists(Exception):
+    def __str__(self):
+        return f"This person is already attending this event."
+
 class EventManager:
     def __init__(self):
         try:
@@ -292,6 +296,18 @@ class EventManager:
     def add_attendee(self, event_id, attendee_name, attendee_age, attendee_gender, attendee_contact):
         if event_id in self.__events:
             event = self.__events[event_id]
+
+            for existing_attendee in event.attendees:
+                if (
+                        existing_attendee.get_name() == attendee_name and
+                        existing_attendee.age == attendee_age and
+                        existing_attendee.gender == attendee_gender and
+                        existing_attendee.contact == attendee_contact
+                ):
+                    raise AttendeeAlreadyExists
+            #ive added this section to check if the user is trying to add a duplicate attendee
+            #this code checks to see if the new attendee is an exact match to one that already exists
+
             attendee = Attendee(attendee_name, attendee_age, attendee_gender, attendee_contact)
             event.add_attendee(attendee)
             self.write_to_file()
@@ -411,6 +427,8 @@ class EventManager:
                     print(e)
                 except IncorrectTextFormat as I:
                     print(I)
+                except AttendeeAlreadyExists as a:
+                    print(a)
             elif choice == '6':
                 try:
                     event_id = input("Enter Event ID: ")
