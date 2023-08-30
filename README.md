@@ -21,4 +21,4 @@
 
 - Add a message to the user if they try to list events but there aren't any (Complete)
 
-- Add custom error handling to check input format for dates
+- Add custom error handling to check input format for dates (Complete)
