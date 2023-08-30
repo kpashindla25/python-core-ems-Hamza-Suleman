@@ -1,7 +1,7 @@
 #Recreating my event management webapp using more OOP fundamentals and abstraction techniques
 
 from abc import ABC, abstractmethod
-import datetime
+from datetime import datetime
 import json
 #im using a json file for this task as they are known to be the best for file handling
 #especially when using dicionaries as i plan to use
@@ -75,7 +75,8 @@ class Attendee(SetName):
         return  (f"\nAttendee Name: {self.get_name()}\n"
                 f"Attendee Age: {self.__age}\n"
                 f"Attendee Gender: {self.__gender}\n"
-                f"Attendee Contact Info: {self.__contact}\n")
+                f"Attendee Contact Info: {self.__contact}\n"
+                f"------------------------------------------")
 #This class encapsulates the attendees, and includes a method name for accessing the protected attribute 'name'
 
 class Event(SetName):
@@ -104,7 +105,9 @@ class Event(SetName):
 
     @date.setter
     def date(self, new_date):
-        self.__date = new_date
+        day, month, year = map(int, new_date.split("/"))
+        self.__date = datetime.date(year, month, day)
+    #this code ensures the date is stored as a date object
 
     @property
     def location(self):
@@ -126,9 +129,19 @@ class Event(SetName):
         self.__attendees = new_attendee
 
     def get_event_info(self):
+        today = datetime.now().date()
+        event_date = datetime.strptime(self.__date, "%d/%m/%Y").date()
+
+        if event_date < today:
+            when = "(Past Event)"
+        elif event_date > today:
+            when = "(Upcoming Event)"
+        else:
+            when = "(Today)"
+
         return (f"\nEvent ID: {self.__event_id}\n"
                 f"Event Name: {self.get_name()}\n"
-                f"Event Date: {self.__date}\n"
+                f"Event Date: {self.__date} {when}\n"
                 f"Event Location: {self.__location}\n"
                 f"Number of Attendees: {len(self.__attendees)}\n"
                 f"------------------------------------------")
@@ -221,7 +234,7 @@ class EventManager:
     def list_events(self):
         if len(self.__events.items()) > 0:
             print(f"Listing {len(self.__events.items())} events in ascending date order...")
-            sorted_events = sorted(self.__events.values(), key=lambda event: event.date)
+            sorted_events = sorted(self.__events.values(), key=lambda event: datetime.strptime(event.date, "%d/%m/%Y"))
             for event in sorted_events:
                 print(event.get_event_info())
         else:
@@ -258,7 +271,7 @@ class EventManager:
     def check_date_format(self,date):
         format = "%d/%m/%Y"
         try:
-            datetime.datetime.strptime(date, format)
+            datetime.strptime(date, format)
         except ValueError:
             raise IncorrectDateFormat
 
